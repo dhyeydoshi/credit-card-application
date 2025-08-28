@@ -1,0 +1,9 @@
+<mat-toolbar color="primary" *ngIf="authService.isLoggedIn()">
+  <span>Credit Card App</span>
+  <span class="spacer"></span>
+
+
+  <button mat-button (click)="logout()">Logout</button>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

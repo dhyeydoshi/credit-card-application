@@ -1,0 +1,70 @@
+<div class="application-container">
+  <mat-card class="application-card">
+    <mat-card-header>
+      <mat-card-title>Credit Card Application</mat-card-title>
+      <mat-card-subtitle>Please provide your financial information</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
+
+        <h3>Employment Information</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Annual Income ($)</mat-label>
+            <input matInput type="number" formControlName="annualIncome">
+            <mat-error>Annual income is required</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Employment Status</mat-label>
+            <mat-select formControlName="employmentStatus">
+              <mat-option *ngFor="let option of employmentOptions" [value]="option.value">
+                {{option.label}}
+              </mat-option>
+            </mat-select>
+            <mat-error>Employment status is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Employer Name</mat-label>
+            <input matInput formControlName="employerName">
+            <mat-error>Employer name is required</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Years at Current Job</mat-label>
+            <input matInput type="number" formControlName="yearsAtJob">
+            <mat-error>Years at job is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <h3>Housing Information</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Monthly Rent/Mortgage ($)</mat-label>
+            <input matInput type="number" formControlName="monthlyRent">
+            <mat-error>Monthly rent/mortgage is required</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Housing Status</mat-label>
+            <mat-select formControlName="housingStatus">
+              <mat-option *ngFor="let option of housingOptions" [value]="option.value">
+                {{option.label}}
+              </mat-option>
+            </mat-select>
+            <mat-error>Housing status is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" routerLink="/dashboard">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="!applicationForm.valid || loading">
+            <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+            <span *ngIf="!loading">Submit Application</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

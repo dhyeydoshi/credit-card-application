@@ -1,0 +1,103 @@
+<div class="dashboard-container">
+  <div class="welcome-section">
+    <h1>Dashboard</h1>
+    <p *ngIf="authService.currentUser$ | async as user">
+      Welcome back, {{user.firstName}} {{user.lastName}}!
+    </p>
+  </div>
+
+  <div class="cards-grid">
+    <mat-card class="action-card">
+      <mat-card-header>
+        <mat-card-title>Quick Actions</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="actions">
+          <button mat-raised-button color="primary" (click)="applyForCard()" class="action-btn">
+            Apply for Credit Card
+          </button>
+          <div class="upload-section">
+            <h3>Upload Documents</h3>
+            <p>Select an application and upload required documents.</p>
+            <mat-form-field appearance="outline">
+              <mat-label>Select Application</mat-label>
+              <mat-select [(ngModel)]="selectedApplicationId">
+                <mat-option *ngFor="let app of applications" [value]="app.id">
+                  Application #{{app.id}} - {{app.status}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Document Type</mat-label>
+              <mat-select [(ngModel)]="documentType">
+                <mat-option value="ID_PROOF">ID Proof</mat-option>
+                <mat-option value="INCOME_PROOF">Income Proof</mat-option>
+                <mat-option value="ADDRESS_PROOF">Address Proof</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <input type="file" (change)="onFileSelected($event)" />
+
+            <button mat-stroked-button color="accent" (click)="uploadDocument()" [disabled]="uploading">
+              <mat-spinner *ngIf="uploading" diameter="20"></mat-spinner>
+              <span *ngIf="!uploading">Upload Document</span>
+            </button>
+          </div>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="applications-card">
+      <mat-card-header>
+        <mat-card-title>Your Applications</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="loading" class="loading-container">
+          <mat-spinner></mat-spinner>
+        </div>
+
+        <div *ngIf="!loading && applications.length === 0" class="no-applications">
+          <p>No applications found.</p>
+          <button mat-button color="accent" (click)="applyForCard()">
+            Apply Now
+          </button>
+        </div>
+
+        <div *ngIf="!loading && applications.length > 0" class="applications-list">
+          <div *ngFor="let app of applications" class="application-item">
+            <div class="app-header">
+              <h3>Application #{{app.id}}</h3>
+              <span class="status-badge" [ngClass]="'status-' + app.status?.toLowerCase()">
+                {{app.status}}
+              </span>
+            </div>
+            <div class="app-details">
+              <p><strong>Annual Income:</strong> {{app.annualIncome | currency}}</p>
+              <p><strong>Employment:</strong> {{app.employmentStatus}}</p>
+              <p><strong>Submitted:</strong> {{app.submittedAt | date:'short'}}</p>
+              <p><strong>Credit Limit($):</strong> {{app.approvedCreditLimit}}</p>
+            </div>
+            <div class="documents-section" *ngIf="applicationDocuments[app.id]?.length">
+              <h4>Uploaded Documents</h4>
+              <ul class="documents-list">
+                <li *ngFor="let doc of applicationDocuments[app.id]">
+                  <span>{{doc.documentType}} - {{doc.originalFileName}}</span>
+                  <a [href]="getDocumentUrl(doc.id)" target="_blank">View</a>
+                </li>
+              </ul>
+            </div>
+
+            <div *ngIf="!applicationDocuments[app.id]" style="margin-top:8px;">
+              <button mat-stroked-button color="primary" (click)="loadApplicationDocuments(app.id)">
+                View Documents
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
