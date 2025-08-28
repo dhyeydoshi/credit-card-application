@@ -1,0 +1,2 @@
+rootProject.name = 'javaCreditCard'
+include 'backend:user-application-service', 'frontend', 'backend:document-service', 'backend:decision-engine-service'
